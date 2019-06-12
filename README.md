@@ -1,6 +1,6 @@
 # speedtest_exporter
 
-![Build Status](https://concourse.whitwell.dev/api/v1/teams/main/pipelines/speedtest_exporter/badge)
+![Update Status](https://concourse.whitwell.dev/api/v1/teams/main/pipelines/speedtest_exporter/badge)
 
 [![](https://images.microbadger.com/badges/image/tnwhitwell/speedtest_exporter.svg)](https://microbadger.com/images/tnwhitwell/speedtest_exporter "Get your own image badge on microbadger.com")
 
