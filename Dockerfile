@@ -9,7 +9,7 @@ RUN apk update && apk add --no-cache git ca-certificates tzdata && update-ca-cer
 
 RUN adduser -D -g '' appuser
 
-ADD . ${GOPATH}/src/app/
+ADD src ${GOPATH}/src/app/
 WORKDIR ${GOPATH}/src/app
 
 RUN go build -a -installsuffix cgo -ldflags="-w -s" -o /go/bin/speedtest_exporter

@@ -1,0 +1,53 @@
+meta:
+  containers:
+    git-ssh: &git-ssh-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/git-ssh
+        tag: f3875548cbc723e9f0ea487aaba5f38302279f72
+jobs:
+  - name: update_submodule
+    plan:
+      - get: speedtest_exporter
+        trigger: true
+      - get: speedtest_exporter-upstream
+        trigger: true
+      - task: update-submodule
+        config:
+          platform: linux
+          image_resource: *git-ssh-image-resource
+          inputs:
+            - name: speedtest_exporter
+          outputs:
+            - name: speedtest_exporter_updated
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                git config --global push.default simple
+                git config --global user.email "concourse@whitwell.dev"
+                git config --global user.name "Concourse"
+                ./speedtest_exporter/concourse/scripts/update-submodule.sh
+      - put: speedtest_exporter
+        params: {repository: speedtest_exporter_updated}
+
+resources:
+  - name: speedtest_exporter
+    type: git
+    source:
+      uri: git@github.com:tnwhitwell/speedtest_exporter.git
+      branch: master
+      private_key: |
+        ((concourse-ssh-key.id_rsa))
+  - name: speedtest_exporter-upstream
+    type: feed
+    check_every: 30m
+    source:
+      feed: https://github.com/nlamirault/speedtest_exporter/commits/master.atom
+resource_types:
+  - name: feed
+    type: docker-image
+    source:
+      repository: databus23/concourse-feed-resource
