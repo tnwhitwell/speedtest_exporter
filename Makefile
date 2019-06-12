@@ -7,8 +7,8 @@ build:
 push:
 	IMAGE_NAME=${IMAGE_NAME} DOCKER_REPO=${DOCKER_REPO} bash hooks/post_push
 
-pipeline:
+update-pipeline:
 	fly -t mine set-pipeline -c concourse/pipelines/update_submodule.yml -p speedtest_exporter
 
-unpause-pipeline:
-	fly -t mine unpause-pipeline -p speedtest_exporter
+run-pipeline:
+	fly -t mine trigger-job -j speedtest_exporter/update_submodule
